@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- FAVICON (LOGO OFICIAL LURUAREPA) -->
+    <link rel="icon" type="image/png" href="img/logo-luruarepa.png">
+    <link rel="apple-touch-icon" href="img/logo-luruarepa.png">
+    <title>LuruArepa: PWA en Oracle APEX | II Encuentro de Grupos y Semilleros ECBTI UNAD 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Paleta Oficial LuruArepa (Maíz & Verde Vegetal) y ECBTI UNAD */
+            --luru-gold: #E6A125;
+            --luru-gold-hover: #D4881A;
+            --luru-gold-light: #FFF8E7;
+            --luru-green: #265D36;
+            --luru-green-dark: #1A4D2E;
+            --luru-green-light: #EBF4ED;
+            --luru-mint: #6B9E8E;
+            --luru-dark: #0A160F;
+
+            --unad-navy: #1A4D2E;
+            --unad-blue: #265D36;
+            --unad-blue-light: #EBF4ED;
+            --unad-gold: #E6A125;
+            --unad-gold-hover: #D4881A;
+            --unad-gold-light: #FFF8E7;
+            --unad-orange: #D4881A;
+            --unad-dark: #0A160F;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --bg-canvas: #0A160F;
+            --bg-slide: #FFFFFF;
+            --border-light: #E2E8F0;
+            --ods8-color: #A21942;
+            --ods9-color: #FD6925;
+            --success-green: #265D36;
+            --shadow-card: 0 10px 30px rgba(0, 45, 90, 0.12);
+            --shadow-pop: 0 20px 40px rgba(0, 0, 0, 0.25);
+            --trans-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-canvas);
+            color: var(--text-dark);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* --- BARRA SUPERIOR DE LA PLANTILLA OFICIAL --- */
+        header.top-header {
+            height: 56px;
+            background: rgba(0, 45, 90, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--unad-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 100;
+            color: #FFFFFF;
+        }
+
+        .header-logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .unad-pill-badge {
+            background: linear-gradient(135deg, var(--unad-gold), #FFBA33);
+            color: var(--unad-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            padding: 4px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 8px rgba(246, 168, 0, 0.35);
+        }
+
+        .event-title-banner {
+            font-size: 0.8rem;
+            line-height: 1.25;
+            color: #CBD5E1;
+        }
+
+        .event-title-banner strong {
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        /* CRONÓMETRO OFICIAL DE 8 MINUTOS */
+        .timer-badge-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 25, 47, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .timer-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #4ADE80;
+            letter-spacing: 0.08em;
+            min-width: 65px;
+            text-align: center;
+        }
+
+        .timer-clock.warning {
+            color: #FBBF24;
+            animation: pulse-warn 1s infinite alternate;
+        }
+
+        .timer-clock.danger {
+            color: #F87171;
+            animation: pulse-danger 0.5s infinite alternate;
+        }
+
+        @keyframes pulse-warn {
+            from { opacity: 1; } to { opacity: 0.6; }
+        }
+        @keyframes pulse-danger {
+            from { opacity: 1; transform: scale(1.04); }
+            to { opacity: 0.7; transform: scale(0.96); }
+        }
+
+        .timer-ctrl-btn {
+            background: none;
+            border: none;
+            color: #CBD5E1;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: var(--trans-smooth);
+        }
+
+        .timer-ctrl-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* BOTONES DE HERRAMIENTAS HEADER */
+        .top-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--trans-smooth);
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            background: var(--unad-gold);
+            color: var(--unad-navy);
+            border-color: var(--unad-gold);
+        }
+
+        /* --- BARRA DE PROGRESO DE LA PONENCIA --- */
+        .progress-track {
+            height: 4px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 9%;
+            background: linear-gradient(90deg, var(--unad-gold), #4ADE80);
+            transition: width 0.4s ease;
+        }
+
+        /* --- CONTENEDOR DEL DECK --- */
+        main.deck-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 28px;
+        }
+
+        .slide-frame {
+            position: absolute;
+            inset: 16px 28px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.97) translateY(18px);
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .slide-frame.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            pointer-events: all;
+        }
+
+        /* --- DIAPOSITIVA OFICIAL ESTILO UNAD --- */
+        .unad-slide-sheet {
+            background: var(--bg-slide);
+            width: 100%;
+            max-width: 1360px;
+            height: 100%;
+            max-height: 760px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-pop);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        /* HEADER OFICIAL DE APARTADO */
+        .slide-official-header {
+            padding: 16px 32px 12px 32px;
+            border-bottom: 2px solid var(--border-light);
+            background: linear-gradient(90deg, #FFFFFF 0%, #F8FAFC 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .slide-official-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 32px;
+            width: 90px;
+            height: 3px;
+            background: var(--unad-gold);
+        }
+
+        .apartado-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--unad-orange);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .slide-official-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.4rem, 2.3vw, 1.85rem);
+            font-weight: 800;
+            color: var(--unad-navy);
+            line-height: 1.15;
+        }
+
+        .time-guide-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--unad-blue);
+            background: var(--unad-blue-light);
+            border: 1px solid #BFDBFE;
+            padding: 4px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        /* CUERPO DE LA DIAPOSITIVA */
+        .slide-official-body {
+            padding: 22px 32px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* PIE DE PÁGINA OFICIAL DE LA PLANTILLA */
+        .slide-official-footer {
+            height: 38px;
+            background: #F8FAFC;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .footer-event-text {
+            color: var(--unad-navy);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        /* REJILLAS Y ESTRUCTURAS */
+        .grid-split {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 26px;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        .grid-split.equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        .grid-4col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        /* CAJAS Y TARJETAS DE CONTENIDO */
+        .content-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 16px 18px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: var(--trans-smooth);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-card:hover {
+            border-color: var(--unad-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 45, 90, 0.08);
+        }
+
+        .content-card.gold-line {
+            border-top: 4px solid var(--unad-gold);
+        }
+
+        .content-card.blue-line {
+            border-top: 4px solid var(--unad-blue);
+        }
+
+        .content-card.green-line {
+            border-top: 4px solid var(--success-green);
+        }
+
+        .card-heading {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--unad-navy);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .content-card p {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-card ul li {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: #475569;
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .content-card ul li::before {
+            content: '•';
+            color: var(--unad-gold);
+            font-size: 1.25rem;
+            position: absolute;
+            left: 2px;
+            top: -3px;
+        }
+
+        /* ETIQUETAS Y BADGES */
+        .ods-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .ods-8 {
+            background: #FCE7F0;
+            color: var(--ods8-color);
+            border: 1px solid #F8B4D9;
+        }
+
+        .ods-9 {
+            background: #FFF0E6;
+            color: var(--ods9-color);
+            border: 1px solid #FFCCA8;
+        }
+
+        .tech-pill {
+            background: #F1F5F9;
+            color: var(--unad-navy);
+            border: 1px solid #CBD5E1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        /* VISOR DE MEDIOS Y MINIATURAS */
+        .media-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            transition: var(--trans-smooth);
+        }
+
+        .media-box:hover {
+            border-color: var(--unad-gold);
+            box-shadow: 0 8px 24px rgba(0, 45, 90, 0.15);
+            transform: scale(1.015);
+        }
+
+        .media-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .media-box .bar-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 45, 90, 0.88);
+            color: #FFFFFF;
+            padding: 6px 12px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .zoom-chip {
+            background: var(--unad-gold);
+            color: var(--unad-navy);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.68rem;
+            font-weight: 800;
+        }
+
+        /* --- DIAPOSITIVA DE PORTADA (SLIDE 1 DE PLANTILLA) --- */
+        .cover-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            height: 100%;
+            align-items: center;
+            gap: 40px;
+            padding: 20px 10px;
+        }
+
+        .cover-title-display {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+            font-weight: 900;
+            color: var(--unad-navy);
+            line-height: 1.12;
+            margin-bottom: 14px;
+        }
+
+        .cover-title-display span {
+            color: var(--unad-gold);
+            display: block;
+        }
+
+        .cover-sub {
+            font-size: 1.1rem;
+            color: #475569;
+            line-height: 1.45;
+            margin-bottom: 24px;
+        }
+
+        .cover-meta-table {
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .meta-col strong {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--unad-blue);
+            margin-bottom: 2px;
+        }
+
+        .meta-col span {
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .cover-banner-card {
+            background: linear-gradient(135deg, var(--unad-navy) 0%, var(--unad-blue) 100%);
+            border: 2px solid var(--unad-gold);
+            border-radius: 16px;
+            padding: 28px;
+            color: #FFFFFF;
+            text-align: center;
+            box-shadow: 0 16px 36px rgba(0, 45, 90, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-banner-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(246, 168, 0, 0.3) 0%, transparent 70%);
+        }
+
+        /* --- BARRA INFERIOR DE NAVEGACIÓN --- */
+        footer.bottom-bar {
+            height: 52px;
+            background: #001E3D;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 100;
+            color: #94A3B8;
+        }
+
+        .slide-counter-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 4px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-controls-center {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-deck-btn {
+            background: var(--unad-blue);
+            color: #FFFFFF;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--trans-smooth);
+        }
+
+        .nav-deck-btn:hover {
+            background: var(--unad-gold);
+            color: var(--unad-navy);
+            transform: translateY(-1px);
+        }
+
+        .nav-deck-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .dot-indicators {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .step-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: var(--trans-smooth);
+        }
+
+        .step-dot.active {
+            background: var(--unad-gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 8px var(--unad-gold);
+        }
+
+        /* --- PANEL DE GUION DEL ORADOR --- */
+        #speaker-notes-drawer {
+            position: fixed;
+            bottom: 52px;
+            right: 20px;
+            width: 480px;
+            max-width: 92vw;
+            height: 350px;
+            background: #FFFFFF;
+            border: 2px solid var(--unad-blue);
+            border-radius: 14px 14px 0 0;
+            box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.45);
+            z-index: 250;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(110%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #speaker-notes-drawer.open {
+            transform: translateY(0);
+        }
+
+        .notes-head {
+            background: var(--unad-navy);
+            color: #FFFFFF;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .notes-head h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            color: var(--unad-gold);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notes-body {
+            padding: 16px 20px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 0.95rem;
+            color: #1E293B;
+            line-height: 1.6;
+        }
+
+        .notes-pacing-box {
+            background: var(--unad-gold-light);
+            border-left: 4px solid var(--unad-gold);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #92400E;
+            margin-bottom: 12px;
+        }
+
+        /* --- MODAL DE VISTA GENERAL (GRID) --- */
+        #overview-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 20, 36, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            display: none;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        #overview-modal.open {
+            display: block;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 20px auto 0 auto;
+        }
+
+        .overview-card-item {
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--trans-smooth);
+        }
+
+        .overview-card-item:hover {
+            border-color: var(--unad-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(246, 168, 0, 0.25);
+        }
+
+        .overview-card-item.active {
+            border-color: var(--unad-blue);
+            box-shadow: 0 0 16px rgba(0, 75, 141, 0.4);
+        }
+
+        /* --- LIGHTBOX MODAL --- */
+        #lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.93);
+            z-index: 400;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        #lightbox-overlay.open {
+            display: flex;
+        }
+
+        .lightbox-container {
+            max-width: 90vw;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .lightbox-container img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            object-fit: contain;
+        }
+
+        .lightbox-close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--unad-gold);
+            color: var(--unad-navy);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* --- ESTILOS DE IMPRESIÓN OFICIAL PARA PDF --- */
+        @media print {
+            body {
+                background: #FFFFFF;
+                overflow: visible;
+            }
+            header.top-header, footer.bottom-bar, #speaker-notes-drawer, #overview-modal, #lightbox-overlay {
+                display: none !important;
+            }
+            main.deck-area {
+                padding: 0;
+                display: block;
+            }
+            .slide-frame {
+                position: relative !important;
+                inset: auto !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                page-break-after: always;
+                height: 100vh;
+                margin-bottom: 20px;
+            }
+            .unad-slide-sheet {
+                max-height: 100vh;
+                box-shadow: none;
+                border: 1px solid #CBD5E1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+        <div class="header-logo-group">
+            <img src="img/logo-luruarepa.png" alt="LuruArepa Logo" style="height:36px; width:36px; border-radius:50%; border:2px solid var(--unad-gold); object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,0.35);">
+            <span class="unad-pill-badge">UNAD ECBTI</span>
+            <div class="event-title-banner">
+                <strong>II Encuentro de Grupos y Semilleros de Investigación e Innovación</strong><br>
+                <span>V Jornada Internacional de Ingeniería Aplicada 2026 • Sala Zona Caribe (Miércoles 4 de nov, 13:00 - 13:08)</span>
+            </div>
+        </div>
+
+        <!-- CRONÓMETRO DE 8 MINUTOS -->
+        <div class="timer-badge-box">
+            <button class="timer-ctrl-btn" id="btn-timer-toggle" title="Iniciar / Pausar Cronómetro (Tecla T)">▶</button>
+            <div class="timer-clock" id="live-timer">00:00</div>
+            <button class="timer-ctrl-btn" id="btn-timer-reset" title="Reiniciar Cronómetro">↺</button>
+            <span style="font-size:0.72rem; color:#94A3B8; font-weight:700;">/ 08:00</span>
+        </div>
+
+        <div class="top-tools">
+            <button class="tool-btn" id="btn-open-notes" title="Guion del Orador (Tecla N)">
+                <span>🎙</span> Guion Ponente
+            </button>
+            <button class="tool-btn" id="btn-open-overview" title="Todas las diapositivas (Tecla O)">
+                <span>▦</span> Índice
+            </button>
+            <button class="tool-btn" id="btn-open-fullscreen" title="Pantalla Completa (Tecla F)">
+                <span>⛶</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- BARRA DE PROGRESO -->
+    <div class="progress-track">
+        <div class="progress-fill" id="slide-progress-fill"></div>
+    </div>
+
+    <!-- ÁREA DE DIAPOSITIVAS (11 DIAPOSITIVAS BASADAS EN PLANTILLA_EVENTO.PPTX) -->
+    <main class="deck-area" id="deck-canvas">
+
+        <!-- ==========================================
+             DIAPOSITIVA 1: PORTADA (PLANTILLA SLIDE 1)
+        =========================================== -->
+        <section class="slide-frame active" data-slide="1" data-section="Portada Oficial" data-time="≈ 0,5 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-body">
+                    <div class="cover-layout">
+                        <div>
+                            <div style="display:inline-flex; align-items:center; gap:8px; background:var(--unad-gold-light); border:1px solid #FCD34D; color:#92400E; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:800; margin-bottom:14px;">
+                                <span>🏅</span> Ponencia de Investigación Aplicada (8 min)
+                            </div>
+                            <h1 class="cover-title-display">
+                                LuruArepa:
+                                <span>PWA en Oracle APEX</span>
+                            </h1>
+                            <p class="cover-sub">
+                                Para la comercialización de productos tradicionales de <strong>ASOPRAL</strong> en Luruaco, Atlántico.
+                            </p>
+
+                            <div class="cover-meta-table">
+                                <div class="meta-col">
+                                    <strong>Autor / Ponente</strong>
+                                    <span>Marcelo Augusto Barraza Santiago</span>
+                                </div>
+                                <div class="meta-col">
+                                    <strong>Semillero de Investigación</strong>
+                                    <span>SINERGIA (Investigación Aplicada)</span>
+                                </div>
+                                <div class="meta-col">
+                                    <strong>Programa · Centro – Zona</strong>
+                                    <span>Ing. de Sistemas · Puerto Colombia – Zona Caribe</span>
+                                </div>
+                                <div class="meta-col">
+                                    <strong>Tutor del Proyecto</strong>
+                                    <span>Ing. Mario Luis Ávila Pérez</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="cover-banner-card">
+                                <img src="img/logo-luruarepa.png" alt="Logo LuruArepa" style="width:110px; height:110px; border-radius:50%; border:3px solid var(--unad-gold); box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-bottom:12px; object-fit:cover;">
+                                <h3 style="font-family:'Montserrat', sans-serif; font-size:1.3rem; margin-bottom:10px;">
+                                    II Encuentro de Grupos y Semilleros ECBTI
+                                </h3>
+                                <p style="font-size:0.88rem; opacity:0.95; line-height:1.5; margin-bottom:18px;">
+                                    En el marco de la V Jornada Internacional de Ingeniería Aplicada 2026<br>
+                                    <strong>Universidad Nacional Abierta y a Distancia — UNAD</strong>
+                                </p>
+                                <div style="display:flex; justify-content:center; gap:8px;">
+                                    <span class="ods-badge ods-8">ODS 8: Trabajo Decente</span>
+                                    <span class="ods-badge ods-9">ODS 9: Innovación</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 1 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 2: APARTADO 1 DE 8 (PLANTILLA SLIDE 3)
+             Contexto y planteamiento del problema (≈ 1,5 min -> 1:15 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="2" data-section="Apartado 1 de 8: Contexto y problema" data-time="≈ 1,5 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 1 DE 8</div>
+                        <h2 class="slide-official-title">Contexto y planteamiento del problema</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1,5 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-split">
+                        <div style="display:flex; flex-direction:column; gap:14px;">
+                            <div class="content-card blue-line">
+                                <h3 class="card-heading">📍 Contexto Territorial y Comunitario</h3>
+                                <p><strong>Luruaco (Atlántico):</strong> Municipio cuna de la arepa de huevo, manifestación representativa del patrimonio cultural y gastronómico del Caribe Colombiano.</p>
+                                <p><strong>Comunidad Afectada:</strong> La <strong>Asociación de Productoras de Arepas de Huevo (ASOPRAL)</strong>, conformada por matronas tradicionales de la economía popular que dependen de este oficio artesanal.</p>
+                            </div>
+
+                            <div class="content-card gold-line">
+                                <h3 class="card-heading">🛑 Problema de Investigación</h3>
+                                <p style="font-weight:600; color:var(--unad-navy);">
+                                    El proceso de comercialización de ASOPRAL opera bajo un esquema 100% manual e informal (libretas de papel y chats personales de WhatsApp).
+                                </p>
+                                <ul>
+                                    <li><strong>Desorden y cruce de pedidos:</strong> En fines de semana y festivales, los pedidos se pierden o confunden en el chat en medio de la fritura de arepas.</li>
+                                    <li><strong>Cero trazabilidad de datos:</strong> Ausencia total de histórico de clientes, costos e inventario de materias primas.</li>
+                                    <li><strong>Sobrecarga operativa:</strong> Estrés laboral para las matronas y límite estricto para expandirse a mercados de Barranquilla y Cartagena.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                            <div class="media-box" onclick="openLightboxImage('img/foto-productoras.jpg', 'Productoras tradicionales de ASOPRAL en su centro de trabajo en Luruaco, Atlántico')">
+                                <img src="img/foto-productoras.jpg" alt="Productoras ASOPRAL" onerror="this.onerror=null; this.src='img/foto-productoras.jpg';">
+                                <div class="bar-caption">
+                                    <span>Evidencia: Matronas productoras de ASOPRAL</span>
+                                    <span class="zoom-chip">🔍 Clic para ampliar</span>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; gap:10px;">
+                                <div style="flex:1; background:var(--unad-blue-light); border:1px solid #BFDBFE; border-radius:8px; padding:10px; text-align:center;">
+                                    <div style="font-family:'Montserrat', sans-serif; font-size:1.6rem; font-weight:800; color:var(--unad-blue);">100%</div>
+                                    <div style="font-size:0.72rem; font-weight:700; color:var(--unad-navy);">Gestión Manual</div>
+                                </div>
+                                <div style="flex:1; background:var(--unad-gold-light); border:1px solid #FCD34D; border-radius:8px; padding:10px; text-align:center;">
+                                    <div style="font-family:'Montserrat', sans-serif; font-size:1.6rem; font-weight:800; color:var(--unad-orange);">0</div>
+                                    <div style="font-size:0.72rem; font-weight:700; color:var(--unad-navy);">Trazabilidad Digital</div>
+                                </div>
+                                <div style="flex:1; background:#FEE2E2; border:1px solid #FCA5A5; border-radius:8px; padding:10px; text-align:center;">
+                                    <div style="font-family:'Montserrat', sans-serif; font-size:1.6rem; font-weight:800; color:#DC2626;">Alta</div>
+                                    <div style="font-size:0.72rem; font-weight:700; color:var(--unad-navy);">Pérdida de Ventas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 2 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 3: APARTADO 2 DE 8 (PLANTILLA SLIDE 4)
+             Pregunta de investigación y objetivos (≈ 1 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="3" data-section="Apartado 2 de 8: Pregunta y objetivos" data-time="≈ 1 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 2 DE 8</div>
+                        <h2 class="slide-official-title">Pregunta de investigación y objetivos</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div style="background:var(--unad-gold-light); border:2px solid var(--unad-gold); border-radius:10px; padding:12px 20px; margin-bottom:16px;">
+                        <span style="font-family:'JetBrains Mono', monospace; font-size:0.78rem; font-weight:800; color:#B45309; text-transform:uppercase;">❓ Pregunta de Investigación</span>
+                        <p style="font-size:1.05rem; font-weight:700; color:var(--unad-navy); margin-top:4px;">
+                            ¿De qué manera el diseño e implementación de una Progressive Web Application (PWA) desarrollada en Oracle APEX permite optimizar la comercialización y control de pedidos de los productos de ASOPRAL en Luruaco, Atlántico?
+                        </p>
+                    </div>
+
+                    <div class="content-card blue-line" style="margin-bottom:16px;">
+                        <h3 class="card-heading">🎯 Objetivo General</h3>
+                        <p style="font-size:1rem; font-weight:600; color:#1E293B;">
+                            <strong>Implementar una Progressive Web Application (PWA)</strong> en Oracle APEX para optimizar la gestión comercial y el control de pedidos de los productos de ASOPRAL, promoviendo la inclusión digital y la preservación de la gastronomía autóctona.
+                        </p>
+                    </div>
+
+                    <div class="grid-3col">
+                        <div class="content-card gold-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:0.8rem; font-weight:800; color:var(--unad-orange); margin-bottom:4px;">OBJETIVO ESPECÍFICO 1</div>
+                            <h4 style="color:var(--unad-navy); margin-bottom:6px;">1. Analizar</h4>
+                            <p style="font-size:0.88rem;">Identificar y documentar los requerimientos funcionales y técnicos del proceso actual de venta de arepas y derivados en ASOPRAL.</p>
+                        </div>
+
+                        <div class="content-card blue-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:0.8rem; font-weight:800; color:var(--unad-blue); margin-bottom:4px;">OBJETIVO ESPECÍFICO 2</div>
+                            <h4 style="color:var(--unad-navy); margin-bottom:6px;">2. Desarrollar</h4>
+                            <p style="font-size:0.88rem;">Construir la PWA en Oracle APEX integrando catálogo digital, carrito de compras y panel de administración por roles.</p>
+                        </div>
+
+                        <div class="content-card green-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:0.8rem; font-weight:800; color:var(--success-green); margin-bottom:4px;">OBJETIVO ESPECÍFICO 3</div>
+                            <h4 style="color:var(--unad-navy); margin-bottom:6px;">3. Desplegar y Validar</h4>
+                            <p style="font-size:0.88rem;">Poner en marcha la plataforma en la nube y validar su usabilidad y nivel de aceptación con la líder y socias de ASOPRAL.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 3 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 4: APARTADO 3 DE 8 (PLANTILLA SLIDE 5)
+             Referentes teóricos y estado del arte (≈ 1 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="4" data-section="Apartado 3 de 8: Referentes teóricos" data-time="≈ 1 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 3 DE 8</div>
+                        <h2 class="slide-official-title">Referentes teóricos y estado del arte</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-3col">
+                        <div class="content-card blue-line">
+                            <h3 class="card-heading">📱 Conceptos Clave</h3>
+                            <p><strong>PWA (Progressive Web App):</strong> Combina la universalidad de la web con capacidades nativas móviles (Service Workers, bajo consumo, acceso instantáneo por URL/QR sin pasar por tiendas) (Pressman & Maxim, 2020).</p>
+                            <p><strong>Oracle APEX (Low-Code):</strong> Plataforma ágil de alta productividad construida sobre base de datos relacional Oracle Autonomous Database, con seguridad nativa y arquitectura robusta (Oracle, 2023).</p>
+                        </div>
+
+                        <div class="content-card gold-line">
+                            <h3 class="card-heading">🏛 Antecedentes</h3>
+                            <p><strong>Inclusión Digital Rural:</strong> Estudios de innovación social demuestran que las microempresas agroalimentarias aumentan un 35% su competitividad al incorporar canales de pedido ordenados (Leal Afanador, 2021).</p>
+                            <p><strong>Comercio Gastronómico Tradicional:</strong> La virtualidad bien orientada dignifica el trabajo de matronas y artesanas al otorgarles autonomía comercial.</p>
+                        </div>
+
+                        <div class="content-card green-line">
+                            <h3 class="card-heading">💡 Vacío que aborda el trabajo</h3>
+                            <p><strong>Barrera de Adopción Rural:</strong> La mayoría de apps de delivery exigen comisiones abusivas (20-30%) y teléfonos de gama alta que excluyen a las productoras rurales.</p>
+                            <p><strong>Aporte Novedoso:</strong> Una PWA ligera, autogestionada por la asociación y con cero costo de infraestructura bajo Oracle Cloud Always Free.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 4 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 5: APARTADO 4 DE 8 (PLANTILLA SLIDE 6)
+             Metodología (≈ 1,5 min -> 1:00 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="5" data-section="Apartado 4 de 8: Metodología" data-time="≈ 1,5 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 4 DE 8</div>
+                        <h2 class="slide-official-title">Metodología de Desarrollo: Extreme Programming (XP)</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1,5 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-split">
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                            <div class="grid-2col equal" style="gap:10px;">
+                                <div class="content-card" style="padding:10px 14px;">
+                                    <strong style="color:var(--unad-gold); font-size:0.78rem;">01 • ENFOQUE Y TIPO</strong>
+                                    <p style="font-size:0.84rem; margin-top:2px;">Investigación aplicada y desarrollo tecnológico con enfoque mixto (cualitativo y cuantitativo).</p>
+                                </div>
+                                <div class="content-card" style="padding:10px 14px;">
+                                    <strong style="color:var(--unad-blue); font-size:0.78rem;">02 • POBLACIÓN / MUESTRA</strong>
+                                    <p style="font-size:0.84rem; margin-top:2px;">Comunidad ASOPRAL en Luruaco: muestra censal de 10 productoras activas y su representante legal.</p>
+                                </div>
+                            </div>
+
+                            <div class="content-card blue-line">
+                                <strong style="color:var(--unad-navy); font-size:0.85rem;">03 & 04 • PROCEDIMIENTO EN 3 FASES XP</strong>
+                                <ul style="margin-top:6px;">
+                                    <li><strong>Fase 1: Diagnóstico:</strong> Instrumentos Microsoft Forms, matriz DOFA, levantamiento de Historias de Usuario (HU).</li>
+                                    <li><strong>Fase 2: Construcción Ágil:</strong> Iteraciones cortas de codificación en Oracle APEX, scripts PL/SQL, diseño responsivo PWA.</li>
+                                    <li><strong>Fase 3: Validación y Entrega:</strong> Despliegue en la nube, pruebas de usabilidad presenciales y firma del acta de entrega.</li>
+                                </ul>
+                            </div>
+
+                            <div class="content-card">
+                                <strong style="font-size:0.82rem; color:var(--text-muted);">HERRAMIENTAS Y SOFTWARE EMPLEADOS</strong>
+                                <div style="margin-top:4px;">
+                                    <span class="tech-pill">Oracle APEX 23.x</span>
+                                    <span class="tech-pill">Oracle Autonomous DB 19c</span>
+                                    <span class="tech-pill">PL/SQL</span>
+                                    <span class="tech-pill">PWA Standards</span>
+                                    <span class="tech-pill">GitHub</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div class="media-box" style="min-height:160px;" onclick="openLightboxImage('img/diagrama-xp.jpg', 'Ciclo Iterativo de Extreme Programming (XP) adaptado al proyecto LuruArepa')">
+                                <img src="img/diagrama-xp.jpg" alt="Diagrama XP" onerror="this.onerror=null; this.src='img/diagrama-xp.jpg';">
+                                <div class="bar-caption">
+                                    <span>Ciclo Ágil Extreme Programming (XP)</span>
+                                    <span class="zoom-chip">🔍 Ampliar</span>
+                                </div>
+                            </div>
+
+                            <div class="media-box" style="min-height:140px;" onclick="openLightboxImage('img/diagrama-er.jpg', 'Diagrama Entidad-Relación de la Base de Datos Relacional Oracle')">
+                                <img src="img/diagrama-er.jpg" alt="Diagrama ER" onerror="this.onerror=null; this.src='img/diagrama-er.jpg';">
+                                <div class="bar-caption">
+                                    <span>Modelo de Datos Relacional (DER)</span>
+                                    <span class="zoom-chip">🔍 Ampliar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 5 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 6: APARTADO 5 DE 8 (PLANTILLA SLIDE 7)
+             Resultados o avances (≈ 2 min -> 1:30 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="6" data-section="Apartado 5 de 8: Resultados o avances" data-time="≈ 2 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 5 DE 8</div>
+                        <h2 class="slide-official-title">Resultados: La Solución PWA LuruArepa</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 2 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-3col">
+                        <!-- MÓDULO 1: CATÁLOGO -->
+                        <div class="content-card blue-line">
+                            <div class="media-box" style="min-height:140px; margin-bottom:10px;" onclick="openLightboxImage('img/captura-catalogo.jpg', 'Módulo 1: Catálogo digital de arepas tradicionales, masas y combos')">
+                                <img src="img/captura-catalogo.jpg" alt="Catálogo PWA" onerror="this.onerror=null; this.src='img/captura-catalogo.jpg';">
+                                <div class="bar-caption">
+                                    <span>Catálogo Digital</span>
+                                    <span class="zoom-chip">🔍</span>
+                                </div>
+                            </div>
+                            <h3 class="card-heading">1. Catálogo Digital</h3>
+                            <p style="font-size:0.86rem; color:#475569;">
+                                <strong>Hallazgo 1:</strong> Vitrina interactiva con fotos reales y precios transparentes de arepas de huevo, con carne, masas (amarilla y blanca) y combos para fiestas.
+                            </p>
+                            <span style="font-size:0.75rem; color:var(--success-green); font-weight:700;">✓ Elimina dudas sobre precios y productos</span>
+                        </div>
+
+                        <!-- MÓDULO 2: CARRITO -->
+                        <div class="content-card gold-line">
+                            <div class="media-box" style="min-height:140px; margin-bottom:10px;" onclick="openLightboxImage('img/captura-carrito.jpg', 'Módulo 2: Carrito y generación de pedidos en línea')">
+                                <img src="img/captura-carrito.jpg" alt="Carrito PWA" onerror="this.onerror=null; this.src='img/captura-carrito.jpg';">
+                                <div class="bar-caption">
+                                    <span>Carrito de Compras</span>
+                                    <span class="zoom-chip">🔍</span>
+                                </div>
+                            </div>
+                            <h3 class="card-heading">2. Carrito y Pedidos</h3>
+                            <p style="font-size:0.86rem; color:#475569;">
+                                <strong>Hallazgo 2:</strong> Proceso de orden fluido en 3 pasos con cálculo automático de totales y confirmación unívoca por pedido.
+                            </p>
+                            <span style="font-size:0.75rem; color:var(--success-green); font-weight:700;">✓ Acaba con los mensajes perdidos de WhatsApp</span>
+                        </div>
+
+                        <!-- MÓDULO 3: BACKOFFICE -->
+                        <div class="content-card green-line">
+                            <div class="media-box" style="min-height:140px; margin-bottom:10px;" onclick="openLightboxImage('img/captura-admin.jpg', 'Módulo 3: Panel administrativo con semáforo de estados para matronas')">
+                                <img src="img/captura-admin.jpg" alt="Admin PWA" onerror="this.onerror=null; this.src='img/captura-admin.jpg';">
+                                <div class="bar-caption">
+                                    <span>Backoffice Matronas</span>
+                                    <span class="zoom-chip">🔍</span>
+                                </div>
+                            </div>
+                            <h3 class="card-heading">3. Control de Estados</h3>
+                            <p style="font-size:0.86rem; color:#475569;">
+                                <strong>Hallazgo 3:</strong> Semáforo operativo en vivo: <em>Recibido ➔ En preparación ➔ Enviado ➔ Entregado</em>, controlado con un solo toque.
+                            </p>
+                            <span style="font-size:0.75rem; color:var(--success-green); font-weight:700;">✓ Trazabilidad completa en cocina</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 6 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 7: APARTADO 6 DE 8 (PLANTILLA SLIDE 8)
+             Análisis y discusión (≈ 1 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="7" data-section="Apartado 6 de 8: Análisis y discusión" data-time="≈ 1 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 6 DE 8</div>
+                        <h2 class="slide-official-title">Análisis y discusión: Validación con ASOPRAL</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-split">
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                            <div class="content-card blue-line">
+                                <h3 class="card-heading">📊 Validación Cuantitativa de Usabilidad</h3>
+                                <p style="font-size:0.85rem;">Prueba formal realizada en Luruaco (7 de nov 2025) con <strong>Mileidys García</strong> (Líder ASOPRAL) y socias:</p>
+                                
+                                <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                                        <span>Accesibilidad Móvil (PWA):</span>
+                                        <strong style="color:var(--success-green);">5.0 / 5.0 ⭐⭐⭐⭐⭐</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                                        <span>Diseño y Claridad de Interfaz:</span>
+                                        <strong style="color:var(--success-green);">5.0 / 5.0 ⭐⭐⭐⭐⭐</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                                        <span>Catálogo de Productos:</span>
+                                        <strong style="color:var(--success-green);">5.0 / 5.0 ⭐⭐⭐⭐⭐</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                                        <span>Gestión de Pedidos:</span>
+                                        <strong style="color:var(--unad-orange);">4.0 / 5.0 ⭐⭐⭐⭐</strong>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                                        <span>Seguimiento de Órdenes:</span>
+                                        <strong style="color:var(--unad-orange);">4.0 / 5.0 ⭐⭐⭐⭐</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="content-card gold-line">
+                                <h3 class="card-heading">🗣 Voz de la Comunidad</h3>
+                                <p style="font-style:italic; color:#334155; font-size:0.88rem;">
+                                    "La aplicación nos quita el enredo de los pedidos perdidos en el WhatsApp y nos da seriedad ante clientes que quieren arepas para fiestas o eventos."
+                                </p>
+                                <span style="font-size:0.75rem; font-weight:700; color:var(--unad-blue);">— Mileidys García, Representante Legal ASOPRAL</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div class="media-box" onclick="openLightboxImage('img/foto-reunion-asopral.jpg', 'Sesión de validación técnica y entrega formal con Mileidys García en Luruaco')">
+                                <img src="img/foto-reunion-asopral.jpg" alt="Validación ASOPRAL" onerror="this.onerror=null; this.src='img/foto-reunion-asopral.jpg';">
+                                <div class="bar-caption">
+                                    <span>Prueba presencial con ASOPRAL</span>
+                                    <span class="zoom-chip">🔍 Ampliar</span>
+                                </div>
+                            </div>
+
+                            <div class="content-card">
+                                <h4 style="font-size:0.88rem; color:var(--unad-navy); margin-bottom:4px;">Discusión y Limitaciones Detectadas</h4>
+                                <p style="font-size:0.82rem; line-height:1.45;">
+                                    <strong>Respuesta a la pregunta:</strong> Se comprobó que la PWA redujo a cero los pedidos duplicados o desatendidos.<br>
+                                    <strong>Limitación operativa:</strong> En el ambiente ruidoso de las pailas y cocinas, se requiere agregar una alerta sonora intensa o vibración continua al recibir pedidos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 7 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 8: APARTADO 7 DE 8 (PLANTILLA SLIDE 9)
+             Conclusiones (≈ 1 min -> 0:45 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="8" data-section="Apartado 7 de 8: Conclusiones" data-time="≈ 1 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 7 DE 8</div>
+                        <h2 class="slide-official-title">Conclusiones del Proyecto</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 1 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-3col">
+                        <div class="content-card blue-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:1.4rem; font-weight:800; color:var(--unad-blue); margin-bottom:4px;">1</div>
+                            <h3 class="card-heading">Respecto al Objetivo 1 (Analizar)</h3>
+                            <p style="font-size:0.9rem; line-height:1.5;">
+                                El diagnóstico participativo con las 10 productoras de ASOPRAL permitió traducir necesidades de una economía informal en <strong>historias de usuario precisas</strong>, identificando que la simplicidad visual era más importante que funcionalidades complejas.
+                            </p>
+                        </div>
+
+                        <div class="content-card gold-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:1.4rem; font-weight:800; color:var(--unad-orange); margin-bottom:4px;">2</div>
+                            <h3 class="card-heading">Respecto al Objetivo 2 (Desarrollar)</h3>
+                            <p style="font-size:0.9rem; line-height:1.5;">
+                                La arquitectura <strong>PWA en Oracle APEX</strong> demostró ser la alternativa óptima para el sector rural: cero costo de licencias, desarrollo ágil y despliegue inmediato sin obligar a las usuarias a liberar espacio en sus teléfonos móviles.
+                            </p>
+                        </div>
+
+                        <div class="content-card green-line">
+                            <div style="font-family:'Montserrat', sans-serif; font-size:1.4rem; font-weight:800; color:var(--success-green); margin-bottom:4px;">3</div>
+                            <h3 class="card-heading">Respecto al Objetivo 3 (Validar)</h3>
+                            <p style="font-size:0.9rem; line-height:1.5;">
+                                La validación en sitio y el <strong>Acta formal de Entrega y Aceptación</strong> suscrita con ASOPRAL confirman que la aplicación es viable, elimina el caos operativo en la recepción de pedidos y sienta una base real de inclusión digital campesina.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 8 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 9: APARTADO 8 DE 8 (PLANTILLA SLIDE 10)
+             Impacto y proyección (≈ 0,5 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="9" data-section="Apartado 8 de 8: Impacto y proyección" data-time="≈ 0,5 min">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">APARTADO 8 DE 8</div>
+                        <h2 class="slide-official-title">Impacto, ODS y Proyección Futura</h2>
+                    </div>
+                    <div class="time-guide-badge">⏱ ≈ 0,5 min</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="grid-split equal">
+                        <div class="content-card blue-line">
+                            <h3 class="card-heading">🌍 Aporte al Territorio y los ODS</h3>
+                            <div style="margin:8px 0 12px 0;">
+                                <span class="ods-badge ods-8" style="font-size:0.85rem; padding:6px 12px;">ODS 8: Trabajo Decente</span>
+                                <span class="ods-badge ods-9" style="font-size:0.85rem; padding:6px 12px;">ODS 9: Innovación e Infraestructura</span>
+                            </div>
+                            <ul>
+                                <li><strong>Territorio Luruaco:</strong> Dignificación del oficio tradicional de la arepa de huevo mediante tecnología que reduce el estrés laboral y protege el patrimonio gastronómico.</li>
+                                <li><strong>Inclusión Económica:</strong> Formalización tecnológica de una asociación de mujeres cabeza de hogar sin barreras de entrada.</li>
+                            </ul>
+                        </div>
+
+                        <div class="content-card gold-line">
+                            <h3 class="card-heading">🚀 Próximos Pasos (Proyección)</h3>
+                            <ul>
+                                <li><strong>Fase 2 de Pagos Digitales:</strong> Integración de pasarelas de pago móvil de bajo costo (Nequi, Daviplata, PSE) para liquidación directa.</li>
+                                <li><strong>Logística de Cadena de Frío:</strong> Despacho refrigerado intermunicipal hacia Barranquilla y Cartagena para masas y arepas pre-fritas.</li>
+                                <li><strong>Divulgación y Registro:</strong> Registro de soporte lógico ante la DNDA y publicación de artículo científico en revista indexada.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:16px; background:linear-gradient(90deg, var(--unad-navy), var(--unad-blue)); color:#FFFFFF; border-radius:8px; padding:12px 20px; text-align:center; border-left:6px solid var(--unad-gold);">
+                        <strong style="color:var(--unad-gold);">Frase de Cierre:</strong> 
+                        <em>"La ingeniería aplicada en la UNAD cobra verdadero sentido cuando la tecnología de punta se pone al servicio de las comunidades, transformando su cotidianidad y preservando su identidad cultural."</em>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 9 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 10: REFERENCIAS (PLANTILLA SLIDE 11)
+             Normas APA 7.ª edición
+        =========================================== -->
+        <section class="slide-frame" data-slide="10" data-section="Referencias APA 7.ª Ed." data-time="Referencias">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-header">
+                    <div>
+                        <div class="apartado-tag">NORMAS APA 7.ª EDICIÓN</div>
+                        <h2 class="slide-official-title">Referencias Bibliográficas</h2>
+                    </div>
+                    <div class="time-guide-badge">📚 Cita tus fuentes</div>
+                </div>
+
+                <div class="slide-official-body">
+                    <div class="content-card blue-line" style="height:100%;">
+                        <div style="font-size:0.86rem; line-height:1.6; color:#334155; display:flex; flex-direction:column; gap:10px;">
+                            <p>• Leal Afanador, J. A. (2021). <em>Educación, innovación y territorio: la apuesta transformadora de la UNAD</em>. Sello Editorial UNAD.</p>
+                            <p>• Oracle Corporation. (2023). <em>Oracle Application Express Documentation: Progressive Web Applications in APEX</em>. Oracle Cloud Infrastructure. https://docs.oracle.com/en/database/oracle/application-express/</p>
+                            <p>• Pressman, R. S., & Maxim, B. R. (2020). <em>Software engineering: a practitioner’s approach</em> (9.ª ed.). McGraw-Hill Education.</p>
+                            <p>• Programa de las Naciones Unidas para el Desarrollo [PNUD]. (2015). <em>Objetivos de Desarrollo Sostenible: Metas y Líneas de Acción 2030</em>. Organización de las Naciones Unidas.</p>
+                            <p>• Sommerville, I. (2016). <em>Software Engineering</em> (10.ª ed.). Pearson Education.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 10 de 11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             DIAPOSITIVA 11: GRACIAS Y PREGUNTAS (PLANTILLA SLIDE 12)
+             Espacio de preguntas (4 min)
+        =========================================== -->
+        <section class="slide-frame" data-slide="11" data-section="Cierre y Preguntas" data-time="4 min Preguntas">
+            <div class="unad-slide-sheet">
+                <div class="slide-official-body" style="text-align:center; align-items:center; justify-content:center;">
+                    <div style="font-size: 3.5rem; margin-bottom:10px;">🥟 🤝 🎓</div>
+                    <h1 style="font-family:'Montserrat', sans-serif; font-size:3rem; font-weight:900; color:var(--unad-navy); margin-bottom:12px;">
+                        ¡Muchas Gracias!
+                    </h1>
+                    <p style="font-size:1.3rem; font-weight:700; color:var(--unad-orange); margin-bottom:24px;">
+                        Sesión de Preguntas y Realimentación del Jurado (4 minutos)
+                    </p>
+
+                    <div style="background:#F8FAFC; border:1px solid var(--border-light); border-radius:12px; padding:18px 30px; max-width:650px; text-align:left; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:20px;">
+                        <p style="margin-bottom:6px;"><strong>Ponente:</strong> Marcelo Augusto Barraza Santiago</p>
+                        <p style="margin-bottom:6px;"><strong>Correo:</strong> mabarrazas@unadvirtual.edu.co</p>
+                        <p style="margin-bottom:6px;"><strong>Semillero:</strong> SINERGIA • Escuela de Ciencias Básicas, Tecnología e Ingeniería (ECBTI)</p>
+                        <p style="margin-bottom:0;"><strong>Centro:</strong> CCAV Puerto Colombia • Universidad Nacional Abierta y a Distancia UNAD</p>
+                    </div>
+
+                    <div style="font-size:0.85rem; color:var(--text-muted);">
+                        II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI<br>
+                        V Jornada Internacional de Ingeniería Aplicada 2026
+                    </div>
+                </div>
+
+                <div class="slide-official-footer">
+                    <span class="footer-event-text">II Encuentro de Grupos y Semilleros de Investigación e Innovación ECBTI | V Jornada Internacional de Ingeniería Aplicada 2026</span>
+                    <span>Diapositiva 11 de 11</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BARRA INFERIOR DE NAVEGACIÓN -->
+    <footer class="bottom-bar">
+        <div>
+            <span class="slide-counter-chip" id="slide-num-chip">1 / 11</span>
+        </div>
+
+        <div class="nav-controls-center">
+            <button class="nav-deck-btn" id="btn-slide-prev" title="Diapositiva Anterior (←)">◀ Anterior</button>
+            <div class="dot-indicators" id="steps-dot-tray"></div>
+            <button class="nav-deck-btn" id="btn-slide-next" title="Siguiente Diapositiva (→ / Espacio)">Siguiente ▶</button>
+        </div>
+
+        <div>
+            <span style="font-size:0.75rem;">Teclas: [←/→] Diapositivas • [T] Cronómetro • [N] Guion • [F] Pantalla Completa</span>
+        </div>
+    </footer>
+
+    <!-- DRAWER DE NOTAS Y GUION DEL PONENTE -->
+    <aside id="speaker-notes-drawer">
+        <div class="notes-head">
+            <h4>🎙 Guion del Ponente (Pacing exacto para 7:30 - 8:00 min)</h4>
+            <button id="btn-close-notes-btn" style="background:none; border:none; color:#FFFFFF; font-size:1.1rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="notes-body" id="notes-text-target"></div>
+    </aside>
+
+    <!-- MODAL DE ÍNDICE DE DIAPOSITIVAS (OVERVIEW) -->
+    <div id="overview-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; max-width:1400px; margin:0 auto; color:#FFFFFF;">
+            <h3 style="font-family:'Montserrat', sans-serif;">Estructura Oficial de la Ponencia (Plantilla ECBTI)</h3>
+            <button id="btn-close-overview-btn" style="background:var(--unad-gold); color:var(--unad-navy); border:none; padding:6px 14px; border-radius:6px; font-weight:700; cursor:pointer;">Cerrar (O)</button>
+        </div>
+        <div class="overview-grid" id="overview-card-container"></div>
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox-overlay">
+        <div class="lightbox-container">
+            <button class="lightbox-close-btn" onclick="closeLightboxImage()">✕</button>
+            <img id="lightbox-zoom-img" src="" alt="Ampliación">
+            <p id="lightbox-caption-text" style="color:#FFFFFF; margin-top:12px; font-weight:600; text-align:center; font-size:0.95rem;"></p>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE CONTROL, NAVEGACIÓN Y CRONÓMETRO -->
+    <script>
+        // GUION DE ORADOR CALIBRADO PARA 8 MINUTOS
+        const speakerScriptsOfficial = {
+            1: {
+                pacing: "Meta: 0:30 min. Saludo institucional protocolario, presentación del semillero SINERGIA y título de la ponencia.",
+                text: `<strong>Saludo y Presentación:</strong><br>Muy buenas tardes honorables jurados, docentes y asistentes al II Encuentro de Grupos y Semilleros de Investigación e Innovación de la ECBTI UNAD 2026.<br><br>Mi nombre es <strong>Marcelo Augusto Barraza Santiago</strong>, estudiante de Ingeniería de Sistemas perteneciente al <strong>Semillero SINERGIA</strong> en el CCAV Puerto Colombia de la Zona Caribe.<br><br>Con la dirección del docente <strong>Mario Luis Ávila Pérez</strong>, pongo a su consideración el proyecto de investigación aplicada titulado: <strong>'LuruArepa: PWA en Oracle APEX para la comercialización de productos de ASOPRAL'</strong>.`
+            },
+            2: {
+                pacing: "Meta: 1:15 min (Acumulado 1:45). Destacar la contradicción entre el patrimonio gastronómico y la informalidad comercial.",
+                text: `<strong>Apartado 1: Contexto y Problema:</strong><br>Nos ubicamos en <strong>Luruaco, Atlántico</strong>, reconocido como la capital mundial de la arepa de huevo, manifestación viva de nuestra gastronomía ancestral.<br><br>Allí trabaja <strong>ASOPRAL</strong>, la Asociación de Productoras de Arepas de Huevo, integrada por mujeres y matronas tradicionales de la economía popular.<br><br>Sin embargo, al diagnosticar su modelo de comercialización encontramos un nudo crítico: <strong>operaban de forma 100% manual e informal</strong>, recibiendo pedidos en libretas de papel y mensajes dispersos de WhatsApp.<br><br>En horas pico o fines de semana, los pedidos se refundían en el chat, se cruzaban órdenes y no existía trazabilidad de ventas ni inventario. Este desorden causaba pérdidas económicas y sobrecarga laboral a las matronas, frenando su acceso a clientes de Barranquilla y Cartagena.`
+            },
+            3: {
+                pacing: "Meta: 1:00 min (Acumulado 2:45). Conectar la pregunta con la triada de objetivos Analizar-Desarrollar-Validar.",
+                text: `<strong>Apartado 2: Pregunta y Objetivos:</strong><br>A partir de esta realidad planteamos la pregunta: <em>¿De qué manera una PWA desarrollada en Oracle APEX permite optimizar la comercialización y control de pedidos de ASOPRAL?</em><br><br>Para resolverla, trazamos como <strong>Objetivo General:</strong> Implementar una Progressive Web Application en Oracle APEX que optimice la comercialización y gestión de pedidos de la asociación.<br><br>Y definimos 3 objetivos específicos:<br><strong>1. Analizar:</strong> Caracterizar requerimientos funcionales y el flujo de venta de las matronas.<br><strong>2. Desarrollar:</strong> Construir la PWA en Oracle APEX con catálogo, carrito y control de estados.<br><strong>3. Desplegar y Validar:</strong> Poner en producción en la nube y evaluar usabilidad y aceptación real con la comunidad.`
+            },
+            4: {
+                pacing: "Meta: 1:00 min (Acumulado 3:45). Justificar la idoneidad técnica de PWA + Oracle APEX para el entorno rural.",
+                text: `<strong>Apartado 3: Referentes Teóricos:</strong><br>La fundamentación tecnológica se basó en dos pilares idóneos para el contexto socioeconómico:<br><br>Primero, las <strong>Progressive Web Applications (PWA)</strong>: a diferencia de las aplicaciones nativas que obligan a descargar cientos de megabytes de la Play Store consumiendo memoria en teléfonos básicos, la PWA se accede instantáneamente por un enlace web o código QR y se ancla a la pantalla de inicio con bajo consumo de datos.<br><br>Segundo, <strong>Oracle APEX (Low-Code)</strong>: una plataforma empresarial respaldada por Oracle Autonomous Database que ofrece desarrollo acelerado, seguridad nativa contra vulnerabilidades y cero costo de infraestructura bajo la capa Always Free de Oracle Cloud.<br><br>Esto responde al vacío de herramientas digitales accesibles para la economía popular, alineándose con el <strong>ODS 8 (Trabajo Decente)</strong> y el <strong>ODS 9 (Innovación Rural)</strong>.`
+            },
+            5: {
+                pacing: "Meta: 1:00 min (Acumulado 4:45). Describir las 3 fases ágiles XP e interacción permanente con las usuarias.",
+                text: `<strong>Apartado 4: Metodología XP:</strong><br>Aplicamos la metodología ágil <strong>Extreme Programming (XP)</strong>, diseñada para mantener un contacto estrecho con el usuario final a lo largo de 3 fases:<br><br>• <strong>Fase 1 (Diagnóstico):</strong> Realizamos entrevistas y encuestas con 10 productoras de ASOPRAL para definir la matriz DOFA y las Historias de Usuario.<br>• <strong>Fase 2 (Construcción):</strong> Diseñamos el modelo relacional (USUARIOS, PRODUCTOS, PEDIDOS) y desarrollamos iterativamente los módulos en Oracle APEX con lógica PL/SQL.<br>• <strong>Fase 3 (Validación y Despliegue):</strong> Desplegamos en Oracle Cloud Infrastructure y realizamos las pruebas de usabilidad presenciales en el centro de producción de Luruaco.`
+            },
+            6: {
+                pacing: "Meta: 1:30 min (Acumulado 6:15). Demostrar los 3 módulos: Catálogo, Carrito y Backoffice de matronas.",
+                text: `<strong>Apartado 5: Resultados y Solución Desarrollada:</strong><br>Como resultado material de la investigación obtuvimos la plataforma <strong>LuruArepa</strong>, compuesta por 3 módulos estratégicos:<br><br><strong>1. Catálogo Digital:</strong> Vitrina clara y atractiva que muestra los productos reales: arepas tradicionales de huevo, arepas con carne, masa amarilla, masa blanca y combos para eventos familiares y turísticos.<br><br><strong>2. Carrito y Confirmación de Pedidos:</strong> Permite al comprador seleccionar cantidades, liquidar totales automáticamente y generar un pedido formal con identificador único, acabando con los errores de cálculo y malentendidos por chat.<br><br><strong>3. Control de Estados (Backoffice de Matronas):</strong> Con un semáforo intuitivo: <em>Recibido ➔ En preparación ➔ Enviado ➔ Entregado</em>, la productora actualiza el estado de cada pedido con un toque, sabiendo con exactitud cuántas arepas debe freír y despachar cada día.`
+            },
+            7: {
+                pacing: "Meta: 1:00 min (Acumulado 7:15). Enfatizar la validación formal en campo con Mileidys García y las métricas.",
+                text: `<strong>Apartado 6: Análisis y Discusión:</strong><br>La investigación no se quedó en simulación. El 7 de noviembre de 2025 realizamos la validación formal en Luruaco junto a la líder de ASOPRAL, la señora <strong>Mileidys García</strong>, y las socias productoras.<br><br>Los resultados de usabilidad fueron contundentes:<br>• <strong>5.0 / 5.0 en Accesibilidad y Navegación PWA:</strong> Demostrando que no hubo barrera de instalación.<br>• <strong>5.0 / 5.0 en Interfaz y Catálogo:</strong> Las fotos y la claridad de precios fueron muy elogiadas.<br>• <strong>4.0 / 5.0 en Gestión de Pedidos:</strong> Donde identificamos una oportunidad valiosa: incorporar alertas sonoras intensas para que la matrona escuche el pedido sobre el ruido del fogón.<br><br>La lideresa resaltó que la aplicación les otorga formalidad y elimina el caos de perder mensajes en WhatsApp.`
+            },
+            8: {
+                pacing: "Meta: 0:45 min (Acumulado 8:00). Conclusiones directas alineadas a los 3 objetivos específicos.",
+                text: `<strong>Apartado 7: Conclusiones:</strong><br>Como conclusiones de este proyecto:<br><br>1. <strong>Respecto al análisis:</strong> El levantamiento en campo demostró que las soluciones digitales rurales deben priorizar la usabilidad visual y flujos simples sobre arquitecturas sobrecargadas.<br><br>2. <strong>Respecto al desarrollo:</strong> Se demostró la viabilidad de Oracle APEX y PWA como tecnologías de alta calidad, robustas y sin costo de licencias para proyectos de impacto comunitario.<br><br>3. <strong>Respecto a la validación:</strong> La entrega formal suscrita con ASOPRAL evidenció que la comunidad adoptó la plataforma de inmediato, resolviendo el problema histórico de desorden en los pedidos.`
+            },
+            9: {
+                pacing: "Meta: 0:30 min. Mensaje inspirador sobre el sentido de la ingeniería aplicada en la UNAD.",
+                text: `<strong>Apartado 8: Impacto y Proyección:</strong><br>El impacto de LuruArepa trasciende el software: dignifica el trabajo de mujeres rurales <strong>(ODS 8)</strong> e impulsa la infraestructura digital en territorios apartados <strong>(ODS 9)</strong>.<br><br>Como proyección futura planteamos integrar pagos electrónicos por Nequi y PSE, y formalizar rutas de despacho en frío hacia Barranquilla.<br><br>Cierro con este mensaje: <em>La ingeniería aplicada de la UNAD cobra su mayor sentido cuando la tecnología de punta transforma la cotidianidad de nuestras comunidades y salvaguarda su patrimonio cultural.</em>`
+            },
+            10: {
+                pacing: "Muestra rápida de las referencias en APA 7.ª edición.",
+                text: `<strong>Referencias Bibliográficas:</strong><br>En pantalla se encuentran las fuentes teóricas y metodológicas que sustentaron este trabajo bajo la norma APA 7.ª edición, incluyendo referentes de ingeniería de software, la plataforma Oracle APEX y las directrices institucionales de innovación y territorio de la UNAD.`
+            },
+            11: {
+                pacing: "Cierre protocolario y apertura a los 4 minutos de preguntas del jurado.",
+                text: `<strong>Cierre y Espacio de Preguntas:</strong><br>Muchas gracias a la Escuela ECBTI, al Semillero SINERGIA y a los señores evaluadores. Quedo atento a sus preguntas y retroalimentación para enriquecer este proyecto de investigación aplicada. <strong>¡Muchas gracias!</strong>`
+            }
+        };
+
+        let currentSlideIdx = 1;
+        const totalSlidesCount = 11;
+        let timerSeconds = 0;
+        let timerTimer = null;
+        let isTimerActive = false;
+
+        const slideFrames = document.querySelectorAll('.slide-frame');
+        const slideNumChip = document.getElementById('slide-num-chip');
+        const progressFill = document.getElementById('slide-progress-fill');
+        const btnPrev = document.getElementById('btn-slide-prev');
+        const btnNext = document.getElementById('btn-slide-next');
+        const stepsDotTray = document.getElementById('steps-dot-tray');
+        const liveTimer = document.getElementById('live-timer');
+        const btnTimerToggle = document.getElementById('btn-timer-toggle');
+        const btnTimerReset = document.getElementById('btn-timer-reset');
+        const notesDrawer = document.getElementById('speaker-notes-drawer');
+        const notesTarget = document.getElementById('notes-text-target');
+        const btnOpenNotes = document.getElementById('btn-open-notes');
+        const btnCloseNotes = document.getElementById('btn-close-notes-btn');
+        const overviewModal = document.getElementById('overview-modal');
+        const overviewGrid = document.getElementById('overview-card-container');
+        const btnOpenOverview = document.getElementById('btn-open-overview');
+        const btnCloseOverview = document.getElementById('btn-close-overview-btn');
+        const btnOpenFullscreen = document.getElementById('btn-open-fullscreen');
+        const lightboxOverlay = document.getElementById('lightbox-overlay');
+        const lightboxZoomImg = document.getElementById('lightbox-zoom-img');
+        const lightboxCaptionText = document.getElementById('lightbox-caption-text');
+
+        // INICIALIZAR DOTS
+        function setupDots() {
+            stepsDotTray.innerHTML = '';
+            for (let i = 1; i <= totalSlidesCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = `step-dot ${i === 1 ? 'active' : ''}`;
+                dot.title = `Ir a Diapositiva ${i}`;
+                dot.addEventListener('click', () => goToSlide(i));
+                stepsDotTray.appendChild(dot);
+            }
+        }
+
+        // INICIALIZAR OVERVIEW
+        function setupOverview() {
+            overviewGrid.innerHTML = '';
+            slideFrames.forEach((frame, idx) => {
+                const num = idx + 1;
+                const section = frame.getAttribute('data-section') || `Diapositiva ${num}`;
+                const time = frame.getAttribute('data-time') || '';
+                const titleElem = frame.querySelector('.slide-official-title') || frame.querySelector('h1') || frame.querySelector('h2');
+                const titleText = titleElem ? titleElem.innerText : `Diapositiva ${num}`;
+
+                const card = document.createElement('div');
+                card.className = `overview-card-item ${num === currentSlideIdx ? 'active' : ''}`;
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <span style="font-family:'JetBrains Mono'; font-size:0.75rem; font-weight:800; color:var(--unad-gold);">DIAPO ${num}</span>
+                        <span style="font-size:0.7rem; background:#F1F5F9; padding:2px 6px; border-radius:10px; font-weight:700;">${time}</span>
+                    </div>
+                    <h5 style="font-family:'Montserrat', sans-serif; font-size:0.85rem; color:var(--unad-navy); margin-bottom:4px;">${titleText.substring(0, 50)}</h5>
+                    <p style="font-size:0.74rem; color:var(--text-muted);">${section}</p>
+                `;
+                card.addEventListener('click', () => {
+                    goToSlide(num);
+                    overviewModal.classList.remove('open');
+                    btnOpenOverview.classList.remove('active');
+                });
+                overviewGrid.appendChild(card);
+            });
+        }
+
+        // NAVEGACIÓN ENTRE DIAPOSITIVAS
+        function goToSlide(n) {
+            if (n < 1 || n > totalSlidesCount) return;
+
+            slideFrames.forEach(f => f.classList.remove('active'));
+            currentSlideIdx = n;
+
+            const targetFrame = document.querySelector(`.slide-frame[data-slide="${n}"]`);
+            if (targetFrame) {
+                targetFrame.classList.add('active');
+
+                // Actualizar contador y progreso
+                slideNumChip.innerText = `${n} / ${totalSlidesCount}`;
+                progressFill.style.width = `${(n / totalSlidesCount) * 100}%`;
+
+                // Actualizar dots
+                document.querySelectorAll('.step-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx + 1 === n);
+                });
+
+                // Actualizar botones
+                btnPrev.disabled = (n === 1);
+                btnNext.disabled = (n === totalSlidesCount);
+                btnNext.innerText = (n === totalSlidesCount) ? 'Fin Ponencia ✓' : 'Siguiente ▶';
+
+                // Actualizar notas
+                renderNotes(n);
+
+                // Actualizar overview highlight
+                document.querySelectorAll('.overview-card-item').forEach((item, idx) => {
+                    item.classList.toggle('active', idx + 1 === n);
+                });
+            }
+        }
+
+        function renderNotes(n) {
+            const data = speakerScriptsOfficial[n];
+            if (data) {
+                notesTarget.innerHTML = `
+                    <div class="notes-pacing-box">⏱ ${data.pacing}</div>
+                    <div>${data.text}</div>
+                `;
+            } else {
+                notesTarget.innerHTML = '<p>Sin notas específicas para esta diapositiva.</p>';
+            }
+        }
+
+        // CRONÓMETRO DE 8 MINUTOS
+        function formatClock(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function refreshTimerDisplay() {
+            liveTimer.innerText = formatClock(timerSeconds);
+            liveTimer.classList.remove('warning', 'danger');
+
+            // 6 min = 360s (warning), 7m30s = 450s (danger)
+            if (timerSeconds >= 450) {
+                liveTimer.classList.add('danger');
+            } else if (timerSeconds >= 360) {
+                liveTimer.classList.add('warning');
+            }
+        }
+
+        function toggleClock() {
+            if (isTimerActive) {
+                clearInterval(timerTimer);
+                isTimerActive = false;
+                btnTimerToggle.innerText = '▶';
+                btnTimerToggle.title = 'Reanudar Cronómetro';
+            } else {
+                isTimerActive = true;
+                btnTimerToggle.innerText = '⏸';
+                btnTimerToggle.title = 'Pausar Cronómetro';
+                timerTimer = setInterval(() => {
+                    timerSeconds++;
+                    refreshTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function resetClock() {
+            clearInterval(timerTimer);
+            isTimerActive = false;
+            timerSeconds = 0;
+            btnTimerToggle.innerText = '▶';
+            refreshTimerDisplay();
+        }
+
+        // PANTALLA COMPLETA
+        function toggleScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // LIGHTBOX
+        function openLightboxImage(src, caption) {
+            lightboxZoomImg.src = src;
+            lightboxCaptionText.innerText = caption || '';
+            lightboxOverlay.classList.add('open');
+        }
+
+        function closeLightboxImage() {
+            lightboxOverlay.classList.remove('open');
+        }
+
+        // LISTENERS DE BOTONES
+        btnPrev.addEventListener('click', () => goToSlide(currentSlideIdx - 1));
+        btnNext.addEventListener('click', () => goToSlide(currentSlideIdx + 1));
+
+        btnTimerToggle.addEventListener('click', toggleClock);
+        btnTimerReset.addEventListener('click', resetClock);
+
+        btnOpenNotes.addEventListener('click', () => {
+            notesDrawer.classList.toggle('open');
+            btnOpenNotes.classList.toggle('active', notesDrawer.classList.contains('open'));
+        });
+        btnCloseNotes.addEventListener('click', () => {
+            notesDrawer.classList.remove('open');
+            btnOpenNotes.classList.remove('active');
+        });
+
+        btnOpenOverview.addEventListener('click', () => {
+            overviewModal.classList.toggle('open');
+            btnOpenOverview.classList.toggle('active', overviewModal.classList.contains('open'));
+        });
+        btnCloseOverview.addEventListener('click', () => {
+            overviewModal.classList.remove('open');
+            btnOpenOverview.classList.remove('active');
+        });
+
+        btnOpenFullscreen.addEventListener('click', toggleScreen);
+
+        lightboxOverlay.addEventListener('click', (e) => {
+            if (e.target === lightboxOverlay) closeLightboxImage();
+        });
+
+        // ATAJOS DE TECLADO
+        document.addEventListener('keydown', (e) => {
+            if (lightboxOverlay.classList.contains('open')) {
+                if (e.key === 'Escape') closeLightboxImage();
+                return;
+            }
+            if (overviewModal.classList.contains('open')) {
+                if (e.key === 'Escape' || e.key === 'o' || e.key === 'O') {
+                    overviewModal.classList.remove('open');
+                    btnOpenOverview.classList.remove('active');
+                }
+                return;
+            }
+
+            switch (e.key) {
+                case 'ArrowRight':
+                case 'PageDown':
+                case ' ':
+                case 'Enter':
+                    goToSlide(currentSlideIdx + 1);
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                case 'Backspace':
+                    goToSlide(currentSlideIdx - 1);
+                    break;
+                case 'Home':
+                    goToSlide(1);
+                    break;
+                case 'End':
+                    goToSlide(totalSlidesCount);
+                    break;
+                case 't':
+                case 'T':
+                    toggleClock();
+                    break;
+                case 'n':
+                case 'N':
+                    notesDrawer.classList.toggle('open');
+                    btnOpenNotes.classList.toggle('active', notesDrawer.classList.contains('open'));
+                    break;
+                case 'o':
+                case 'O':
+                    overviewModal.classList.toggle('open');
+                    btnOpenOverview.classList.toggle('active', overviewModal.classList.contains('open'));
+                    break;
+                case 'f':
+                case 'F':
+                    toggleScreen();
+                    break;
+                case 'Escape':
+                    notesDrawer.classList.remove('open');
+                    btnOpenNotes.classList.remove('active');
+                    break;
+            }
+        });
+
+        // GESTOS TÁCTILES SWIPE
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 50) goToSlide(currentSlideIdx + 1);
+            if (touchEndX > touchStartX + 50) goToSlide(currentSlideIdx - 1);
+        }, false);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupDots();
+            setupOverview();
+            goToSlide(1);
+        });
+    </script>
+</body>
+</html>

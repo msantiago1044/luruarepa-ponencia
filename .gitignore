@@ -1,0 +1,8 @@
+extracted_assets/
+assets_plantilla/
+*.pptx
+*.pdf
+Agenda*
+composite_resultados.jpg
+desktop.ini
+.DS_Store
